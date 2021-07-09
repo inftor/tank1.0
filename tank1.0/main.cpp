@@ -1,26 +1,25 @@
-#include<iostream>
+Ôªø#include<iostream>
 #include <windows.h>
 #include <time.h>
 #include <conio.h>
 
+#define Á©∫Âú∞   0
+#define ÈöúÁ¢çÁâ© 1
+#define ËçâÂú∞   3 
+#define Âù¶ÂÖã   6
+
+#define ‰∏ä 0
+#define ‰∏ã 1
+#define Â∑¶ 2
+#define Âè≥ 3
 int g_nMap[40][40] = {};
+int map_x = 40;
+int map_y = 40;
 
-#define …œ 0
-#define œ¬ 1
-#define ◊Û 2
-#define ”“ 3
-typedef struct _TANKINFO
-{
-	COORD pos;
-	int nDir;
-	int map_x;
-	int map_y;
-}TANKINFO,*PTANKINFO;
-TANKINFO g_TANK;
 
-void WriteChar(int High ,int Wide ,const char* Char ,WORD wArr) {
+void WriteChar(int High, int Wide, const char* Char, WORD wArr) {
 	CONSOLE_CURSOR_INFO cci;
-	cci.bVisible = FALSE;// «∑Òœ‘ æπ‚±Í
+	cci.bVisible = FALSE;//ÊòØÂê¶ÊòæÁ§∫ÂÖâÊ†á
 	cci.dwSize = 1;
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cci);
 	COORD loc;
@@ -31,6 +30,101 @@ void WriteChar(int High ,int Wide ,const char* Char ,WORD wArr) {
 	printf(Char);
 }
 
+
+
+void ndrawmap() {
+	for (int i = 0; i < map_x; i++)
+	{
+		for (int j = 0; j < map_y; j++)
+		{
+			if (i == 0 || j == 0 || i == map_x - 1 || j == map_y - 1) {
+				g_nMap[i][j] = ÈöúÁ¢çÁâ©;
+			}
+			
+			else
+			{
+				g_nMap[i][j] = Á©∫Âú∞;
+			}
+		}
+	}
+
+
+
+	for (int i = 5; i < 10; i++)
+	{
+		for (int j = 4; j < 8; j++)
+		{
+				g_nMap[i][j] = ÈöúÁ¢çÁâ©;
+
+		}
+	}
+	for (int i = 25; i < 29; i++)
+	{
+		for (int j = 23; j < 27; j++)
+		{
+			g_nMap[i][j] = ÈöúÁ¢çÁâ©;
+		}
+	}
+	for (int i = 27; i < 29; i++)
+	{
+		for (int j = 2; j < 30; j++)
+		{
+			g_nMap[i][j] = ËçâÂú∞;
+			WriteChar(i, j, "‚âà", 2 | 2);
+		}
+	}
+
+
+	for (int i = 11; i < 16; i++)
+	{
+		for (int j = 22; j < 30; j++)
+		{
+			g_nMap[i][j] = Á©∫Âú∞;
+			WriteChar(i, j, "‚Äª", 2 | 4);
+		}
+	}
+
+
+
+	for (int i = 0; i < map_x; i++)
+	{
+		for (int j = 0; j < map_y; j++)
+		{
+			if (g_nMap[i][j] == ÈöúÁ¢çÁâ©)
+			{
+				WriteChar(i, j, "‚ñ†", 2 | 9);
+			}
+		}
+	}
+
+}
+
+
+typedef struct _TANKINFO
+{
+	COORD pos;
+	int nDir;
+	int map_x;
+	int map_y;
+}TANKINFO,*PTANKINFO;
+TANKINFO g_TANK;
+
+
+typedef struct _BULLINFO
+{
+	COORD pos;
+	int nDir;
+	int map_x;
+	int map_y;
+	int nLastClock;
+	int nSpeed;
+	char a[3];
+	int nBULLNUM[100];
+	int nZT;
+}BULLINFO, * PBULLINFO;
+BULLINFO g_BULL;
+
+
 int GetKeyInput()
 {
 	if (_kbhit())
@@ -40,38 +134,44 @@ int GetKeyInput()
 
 void DrawTank(/*TANKINFO std=0*/)
 {
-	int y = g_TANK.pos.X;
-	int x = g_TANK.pos.Y;
+	int x = g_TANK.pos.X;
+	int y = g_TANK.pos.Y;
+	g_nMap[x][y] = Âù¶ÂÖã;
 	switch (g_TANK.nDir)
 	{
-	case …œ:
+	case ‰∏ä:
 	{
-		WriteChar(x - 1, y - 1, "  °ı  ", 2 | 8);
-		WriteChar(x - 1, y, "°ı°ı°ı", 2 | 8);
-		WriteChar(x - 1, y + 1, "°ı  °ı", 2 | 8);
-	}
-		break;
-	case œ¬:
-	{
-		WriteChar(x - 1, y - 1, "°ı  °ı", 2 | 8);
-		WriteChar(x - 1, y, "°ı°ı°ı", 2 | 8);
-		WriteChar(x - 1, y + 1, "  °ı  ", 2 | 8);
+
+		WriteChar(x - 1, y - 1, "  ‚ñ°  ", 2 | 8);
+		WriteChar(x, y - 1, "‚ñ°‚ñ°‚ñ°", 2 | 8);
+		WriteChar(x + 1, y - 1, "‚ñ°  ‚ñ°", 2 | 8);
+
+
+
+	}			  
+		break;	  
+	case ‰∏ã:	 
+	{			  
+		WriteChar(x - 1, y - 1, "‚ñ°  ‚ñ°", 2 | 8);
+		WriteChar(x, y - 1,     "‚ñ°‚ñ°‚ñ°", 2 | 8);
+		WriteChar(x + 1, y - 1, "  ‚ñ°  ", 2 | 8);
+
+	}			  
+		break;	  
+				  
+	case Â∑¶:	 
+	{			  
+		WriteChar(x - 1, y - 1, "  ‚ñ°‚ñ°", 2 | 8);
+		WriteChar(x, y - 1,     "‚ñ°‚ñ°  ", 2 | 8);
+		WriteChar(x + 1, y - 1, "  ‚ñ°‚ñ°", 2 | 8);
 	}
 		break;
 
-	case ◊Û:
+	case Âè≥:
 	{
-		WriteChar(x - 1, y - 1, "  °ı°ı", 2 | 8);
-		WriteChar(x - 1, y, "°ı°ı  ", 2 | 8);
-		WriteChar(x - 1, y + 1, "  °ı°ı", 2 | 8);
-	}
-		break;
-
-	case ”“:
-	{
-		WriteChar(x - 1, y - 1, "°ı°ı  ", 2 | 8);
-		WriteChar(x - 1, y, "  °ı°ı", 2 | 8);
-		WriteChar(x - 1, y + 1, "°ı°ı  ", 2 | 8);
+		WriteChar(x - 1, y - 1, "‚ñ°‚ñ°  ", 2 | 8);
+		WriteChar(x, y - 1,     "  ‚ñ°‚ñ°", 2 | 8);
+		WriteChar(x + 1, y - 1, "‚ñ°‚ñ°  ", 2 | 8);
 	}
 		break;
 
@@ -79,52 +179,312 @@ void DrawTank(/*TANKINFO std=0*/)
 		break;
 	}
 }
+void CleanTank()
+{
+	int x = g_TANK.pos.X;
+	int y = g_TANK.pos.Y;
+	g_nMap[x][y] = Á©∫Âú∞;
+	WriteChar(x - 1, y - 1, "      ", 2 | 8);
+	WriteChar(x, y - 1, "      ", 2 | 8);
+	WriteChar(x + 1, y - 1, "      ", 2 | 8);
+	//WriteChar(x + 1, y, "          ", 2 | 8);
 
 
-void Get()
+}
+
+
+void CleanBULL() {
+	WriteChar(g_BULL.pos.X, g_BULL.pos.Y, "  ", 2 | 8);
+}
+void DrawBULL()
+{
+	WriteChar(g_BULL.pos.X, g_BULL.pos.Y, "¬§", 2 | 8);
+}
+
+void MoveBULL()
+{	
+
+		if (clock() - g_BULL.nLastClock > g_BULL.nSpeed)
+		{
+			CleanBULL();
+			g_BULL.nLastClock = clock();
+			switch (g_BULL.nDir)
+			{
+			case ‰∏ä:
+			{
+				if (g_nMap[g_BULL.pos.X - 1][g_BULL.pos.Y] == ÈöúÁ¢çÁâ©)
+				{
+				}
+				else if (g_nMap[g_BULL.pos.X - 1][g_BULL.pos.Y] == ËçâÂú∞)
+				{
+					g_nMap[g_BULL.pos.X - 1][g_BULL.pos.Y] = Á©∫Âú∞;
+					g_BULL.nZT = 0;
+				}
+				else
+				{
+					g_BULL.pos.X--;
+					DrawBULL();
+				}
+
+
+			}
+			break;
+			case ‰∏ã:
+			{
+				if (g_nMap[g_BULL.pos.X + 1][g_BULL.pos.Y] == ÈöúÁ¢çÁâ©)
+				{
+				}
+				else if (g_nMap[g_BULL.pos.X + 1][g_BULL.pos.Y] == ËçâÂú∞)
+				{
+					g_nMap[g_BULL.pos.X + 1][g_BULL.pos.Y] = Á©∫Âú∞;
+					g_BULL.nZT = 0;
+				}
+				else
+				{
+					g_BULL.pos.X++;
+					DrawBULL();
+				}
+
+			}
+			break;
+			case Â∑¶:
+			{
+				if (g_nMap[g_BULL.pos.X][g_BULL.pos.Y - 1] == ÈöúÁ¢çÁâ©)
+				{
+				}
+				else if (g_nMap[g_BULL.pos.X][g_BULL.pos.Y - 1] == ËçâÂú∞)
+				{
+					g_nMap[g_BULL.pos.X][g_BULL.pos.Y - 1] = Á©∫Âú∞;
+					g_BULL.nZT = 0;
+				}
+				else
+				{
+					g_BULL.pos.Y--;
+					DrawBULL();
+				}
+
+			}
+			break;
+			case Âè≥:
+			{
+				if (g_nMap[g_BULL.pos.X][g_BULL.pos.Y + 1] == ÈöúÁ¢çÁâ©)
+				{
+				}
+				else if (g_nMap[g_BULL.pos.X][g_BULL.pos.Y + 1] == ËçâÂú∞)
+				{
+					g_nMap[g_BULL.pos.X][g_BULL.pos.Y + 1] = Á©∫Âú∞;
+					g_BULL.nZT = 0;
+				}
+				else
+				{
+					g_BULL.pos.Y++;
+					DrawBULL();
+				}
+
+			}
+			break;
+			default:
+				break;
+			}
+		}
+	
+}
+
+
+bool TankCheak()  //Ê£ÄÊµãÂù¶ÂÖãÂâçÊñπÈöúÁ¢çÂáΩÊï∞,ÂèÇÈáè‰∏∫ÂÅáÂùêÊ†á„ÄÇËøîÂÄº1‰∏∫ÂèØÈÄöËøá,ËøîÂÄº0‰∏∫ÈòªÊå°(‰∫∫Êú∫ÂÖ±Áî®)
+{
+	switch (g_TANK.nDir)                    //directionÂèòÈáè   1‰∏äÔºå2‰∏ãÔºå3Â∑¶Ôºå4Âè≥
+	{
+	case ‰∏ä:
+		if (g_nMap[g_TANK.pos.X - 2][g_TANK.pos.Y] == 0 && g_nMap[g_TANK.pos.X - 2][g_TANK.pos.Y - 1] == 0 && g_nMap[g_TANK.pos.X - 2][g_TANK.pos.Y + 1] == 0)
+			return 1;
+		else
+			return 0;
+	case ‰∏ã:
+		if (g_nMap[g_TANK.pos.X + 2][g_TANK.pos.Y] == 0 && g_nMap[g_TANK.pos.X + 2][g_TANK.pos.Y - 1] == 0 && g_nMap[g_TANK.pos.X + 2][g_TANK.pos.Y+ 1] == 0)
+			return 1;
+		else
+			return 0;
+	case Â∑¶:
+		if (g_nMap[g_TANK.pos.X][g_TANK.pos.Y - 2] == 0 && g_nMap[g_TANK.pos.X - 1][g_TANK.pos.Y - 2] == 0 && g_nMap[g_TANK.pos.X + 1][g_TANK.pos.Y - 2] == 0)
+			return 1;
+		else
+			return 0;
+	case Âè≥:
+		if (g_nMap[g_TANK.pos.X][g_TANK.pos.Y + 2] == 0 && g_nMap[g_TANK.pos.X - 1][g_TANK.pos.Y + 2] == 0 && g_nMap[g_TANK.pos.X + 1][g_TANK.pos.Y + 2] == 0)
+			return 1;
+		else
+			return 0;
+	default:
+		printf("ÈîôËØØÔºÅÔºÅ");
+		Sleep(5000);
+		return 0;
+	}
+}
+
+
+
+
+int Get()
 {
 	g_TANK.pos.X = 20;
 	g_TANK.pos.Y = 20;
-	g_TANK.nDir = ◊Û;
+	g_TANK.nDir = Â∑¶;
 	int Iit = 0;
+	g_BULL.pos.X = g_TANK.pos.X;
+	g_BULL.pos.Y = g_TANK.pos.Y;
+	DrawTank();
+	ndrawmap();
 	while (true)
 	{
+
+		Sleep(20);
+		CleanTank();
+		CleanBULL();
 		Iit = GetKeyInput();
-		switch (Iit)
-		{
-		case 'w':
-		{
-			g_TANK.nDir = …œ;
-			g_TANK.pos.Y--;
-		}
-			break;
-		case 's':
-		{
-			g_TANK.nDir = œ¬;
-			g_TANK.pos.Y++;
-		}
-			break;
-		case 'a':
-		{
-			g_TANK.nDir = ◊Û;
-			g_TANK.pos.X--;
-		}
-			break;
-		case 'd':
-		{
-			g_TANK.nDir = ”“;
-			g_TANK.pos.X++;
-		}
-			break;
-		case ' ':
 
+
+
+
+
+		if (TankCheak() == 0)
+		{
+		}
+		else
+		{
+
+			switch (Iit)
+			{
+			case 'w':
+			{
+
+				if (g_TANK.nDir != ‰∏ä)
+				{
+					g_TANK.nDir = ‰∏ä;
+				}
+				else
+				{
+					g_TANK.pos.X--;
+				}
+
+			}
+			break;
+			case 's':
+			{
+
+				////g_TANK.nDir = ‰∏ã;
+				//if (TankCheak() == 0)
+				//{
+				//	g_TANK.nDir = ‰∏ä;
+				//}
+				if (g_TANK.nDir != ‰∏ã)
+				{
+					g_TANK.nDir = ‰∏ã;
+				}
+				else
+				{
+					g_TANK.pos.X++;
+				}
+			}
+			break;
+			case 'a':
+			{
+
+				//g_TANK.nDir = Â∑¶;
+				/*if (TankCheak() == 0)
+				{
+					g_TANK.nDir = Âè≥;
+				}*/
+				if (g_TANK.nDir != Â∑¶)
+				{
+					g_TANK.nDir = Â∑¶;
+				}
+				else
+				{
+					g_TANK.pos.Y--;
+				}
+
+			}
+			break;
+			case 'd':
+			{
+
+				//g_TANK.nDir = Âè≥;
+				/*if (TankCheak() == 0)
+				{
+					g_TANK.nDir = Â∑¶;
+				}*/
+				if (g_TANK.nDir != Âè≥)
+				{
+					g_TANK.nDir = Âè≥;
+				}
+				else
+				{
+					g_TANK.pos.Y++;
+				}
+
+			}
+			break;
+			case 'j':
+			{
+				g_BULL.nZT = 0;
+				int a = 1;
+				g_BULL.nSpeed = 20;
+				g_BULL.nLastClock = clock();
+				switch (g_BULL.nDir)
+				{
+				case ‰∏ä:
+				{
+					g_BULL.nDir = g_TANK.nDir;
+					g_BULL.pos.X = g_TANK.pos.X;
+					g_BULL.pos.Y = g_TANK.pos.Y;
+				}
+				break;
+				case ‰∏ã:
+				{
+					g_BULL.nDir = g_TANK.nDir;
+					g_BULL.pos.X = g_TANK.pos.X;
+					g_BULL.pos.Y = g_TANK.pos.Y;
+				}
+				break;
+				case Â∑¶:
+				{
+					g_BULL.nDir = g_TANK.nDir;
+					g_BULL.pos.X = g_TANK.pos.X;
+					g_BULL.pos.Y = g_TANK.pos.Y;
+				}
+				break;
+				case Âè≥:
+				{
+					g_BULL.nDir = g_TANK.nDir;
+					g_BULL.pos.X = g_TANK.pos.X;
+					g_BULL.pos.Y = g_TANK.pos.Y;
+				}
+				break;
+				default:
+					break;
+				}
+
+			}
 			break;
 
-		default:
-			break;
+			default:
+				break;
+			}
 		}
+		
+
 		DrawTank();
-	}  
+
+				MoveBULL();
+
+
+
+
+		
+	}
+
+	
 
 
 	
@@ -133,19 +493,20 @@ void Get()
 
 
 
-void DrawMap()
+void DrawMap(  )
 {
-	 
+	//for(int i=0;i<)
 }
 
 
 
 int main() {
 	system("mode con cols=120 lines=50");
-	SetConsoleTitle(TEXT("ÃπøÀ¥Û’Ω"));
-	WriteChar(10 - 1, 20,   "°ı°ı  ", 2 | 8);
-	WriteChar(10 , 20,     "  °ı°ı", 2 | 8);
-	WriteChar(10 +1, 20, "°ı°ı  ", 2 | 8);
+	SetConsoleTitle(TEXT("Âù¶ÂÖãÂ§ßÊàò"));
+	
+	//WriteChar(10 - 1, 20,   "‚ñ°‚ñ°  ", 2 | 8);
+	//WriteChar(10 , 20,     "  ‚ñ°‚ñ°", 2 | 8);
+	//WriteChar(10 +1, 20, "‚ñ°‚ñ°  ", 2 | 8);
 	Get();
 
 
