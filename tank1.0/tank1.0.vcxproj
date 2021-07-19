@@ -139,9 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="bullte.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="man.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="tank.cpp" />
     <ClCompile Include="源.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bullte.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="man.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="tank.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

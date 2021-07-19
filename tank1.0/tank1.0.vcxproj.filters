@@ -21,8 +21,37 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
+    <ClCompile Include="man.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tank.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bullte.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="man.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tank.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bullte.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
